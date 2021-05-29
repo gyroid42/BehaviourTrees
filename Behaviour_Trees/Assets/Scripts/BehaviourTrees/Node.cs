@@ -33,6 +33,45 @@ namespace BehaviourTrees
         public int ChildIndex;
     }
 
+    public class RepeaterNode : DecoratorNode
+    {
+        private int m_count;
+        
+        public override NodeEvaluationResult Evaluate(Status receivedStatus)
+        {
+            if (receivedStatus == Status.FAILED)
+            {
+                return new NodeEvaluationResult
+                {
+                    nextNodeIndex = ParentIndex,
+                    status = Status.FAILED
+                };
+            }
+            
+            if (receivedStatus == Status.TRAVERSE)
+            {
+                m_count = 0;
+            }
+
+            if (m_count == (int) BehaviourTreeHelper.GetParameter(parameters[0]))
+            {
+                return new NodeEvaluationResult
+                {
+                    nextNodeIndex = ParentIndex,
+                    status = Status.SUCCESS
+                };
+            }
+
+            m_count++;
+            
+            return new NodeEvaluationResult
+            {
+                nextNodeIndex = ChildIndex,
+                status = Status.TRAVERSE
+            };
+        }
+    }
+
     public class InverterNode : DecoratorNode
     {
         public override NodeEvaluationResult Evaluate(Status receivedStatus)
@@ -41,7 +80,6 @@ namespace BehaviourTrees
 
             switch (receivedStatus)
             {
-                case Status.START:
                 case Status.TRAVERSE:
                 case Status.WORKING:
                     result.nextNodeIndex = ChildIndex;
@@ -72,7 +110,6 @@ namespace BehaviourTrees
             
             switch (receivedStatus)
             {
-                case Status.START:
                 case Status.TRAVERSE:
                 case Status.WORKING:
                     result.nextNodeIndex = (int) BehaviourTreeHelper.GetParameter(parameters[0]);

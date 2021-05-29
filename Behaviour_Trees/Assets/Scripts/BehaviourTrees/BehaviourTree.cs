@@ -14,7 +14,7 @@ namespace BehaviourTrees
             m_currentResult = new NodeEvaluationResult
             {
                 nextNodeIndex = 0,
-                status = Status.START
+                status = Status.TRAVERSE
             };
         }
 

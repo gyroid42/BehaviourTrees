@@ -5,7 +5,6 @@
         SUCCESS,
         FAILED,
         TRAVERSE,
-        WORKING,
-        START
+        WORKING
     }
 }
